@@ -1,0 +1,89 @@
+{
+  "entities": {
+    "Project": {
+      "title": "Project",
+      "description": "A portfolio project entry.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique identifier" },
+        "title": { "type": "string", "description": "Project title" },
+        "description": { "type": "string", "description": "Short description" },
+        "content": { "type": "string", "description": "Full project details (markdown)" },
+        "imageUrl": { "type": "string", "description": "Main project image URL" },
+        "tags": { "type": "array", "items": { "type": "string" }, "description": "Tech stack or categories" },
+        "link": { "type": "string", "description": "Live project link" },
+        "github": { "type": "string", "description": "GitHub repository link" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Last update timestamp" },
+        "order": { "type": "integer", "description": "Display order" }
+      },
+      "required": ["title", "description", "createdAt"]
+    },
+    "Profile": {
+      "title": "Profile",
+      "description": "User profile and site settings.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Full name" },
+        "title": { "type": "string", "description": "Professional title" },
+        "bio": { "type": "string", "description": "Short bio" },
+        "about": { "type": "string", "description": "Detailed about section" },
+        "email": { "type": "string", "description": "Contact email" },
+        "avatarUrl": { "type": "string", "description": "Profile picture URL" },
+        "socialLinks": {
+          "type": "object",
+          "properties": {
+            "github": { "type": "string" },
+            "linkedin": { "type": "string" },
+            "twitter": { "type": "string" }
+          }
+        }
+      }
+    },
+    "ContactMessage": {
+      "title": "Contact Message",
+      "description": "A message sent via the contact form.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "message": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "email", "message", "createdAt"]
+    },
+    "Review": {
+      "title": "Review",
+      "description": "A testimonial or review from a client.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "role": { "type": "string" },
+        "content": { "type": "string" },
+        "rating": { "type": "integer" },
+        "avatarUrl": { "type": "string" },
+        "approved": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "content", "rating", "approved", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/projects/{projectId}": {
+      "schema": "Project",
+      "description": "Collection of portfolio projects."
+    },
+    "/settings/profile": {
+      "schema": "Profile",
+      "description": "Global profile settings."
+    },
+    "/messages/{messageId}": {
+      "schema": "ContactMessage",
+      "description": "Collection of contact form messages."
+    },
+    "/reviews/{reviewId}": {
+      "schema": "Review",
+      "description": "Collection of client reviews."
+    }
+  }
+}

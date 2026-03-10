@@ -1,0 +1,124 @@
+// ===============================================================
+// Assumed Data Model
+// ===============================================================
+//
+// Collection: projects
+// Document ID: {projectId}
+// Fields:
+//   - title: string (required)
+//   - description: string (required)
+//   - content: string (optional)
+//   - imageUrl: string (optional)
+//   - tags: list (optional)
+//   - link: string (optional)
+//   - github: string (optional)
+//   - createdAt: timestamp (required)
+//   - updatedAt: timestamp (optional)
+//   - order: number (optional)
+//
+// Collection: settings
+// Document ID: profile
+// Fields:
+//   - name: string
+//   - title: string
+//   - bio: string
+//   - about: string
+//   - email: string
+//   - avatarUrl: string
+//   - socialLinks: map
+//
+// Collection: messages
+// Document ID: {messageId}
+// Fields:
+//   - name: string (required)
+//   - email: string (required)
+//   - message: string (required)
+//   - createdAt: timestamp (required)
+//
+// Collection: reviews
+// Document ID: {reviewId}
+// Fields:
+//   - name: string (required)
+//   - role: string (optional)
+//   - content: string (required)
+//   - rating: number (required)
+//   - avatarUrl: string (optional)
+//   - approved: bool (required)
+//   - createdAt: timestamp (required)
+//
+// ===============================================================
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+        (request.auth.token.email == "ganeshhraikwar@gmail.com" && request.auth.token.email_verified == true);
+    }
+
+    function isValidProject(data) {
+      return data.keys().hasAll(['title', 'description', 'createdAt']) &&
+             data.title is string && data.title.size() > 0 && data.title.size() < 200 &&
+             data.description is string && data.description.size() < 1000;
+    }
+
+    function isValidProfile(data) {
+      return data.name is string && data.name.size() < 100;
+    }
+
+    function isValidMessage(data) {
+      return data.keys().hasAll(['name', 'email', 'message', 'createdAt']) &&
+             data.name is string && data.name.size() > 0 && data.name.size() < 100 &&
+             data.email is string && data.email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$") &&
+             data.message is string && data.message.size() > 0 && data.message.size() < 5000;
+    }
+
+    function isValidReview(data) {
+      return data.keys().hasAll(['name', 'content', 'rating', 'approved', 'createdAt']) &&
+             data.name is string && data.name.size() > 0 && data.name.size() < 100 &&
+             data.content is string && data.content.size() > 0 && data.content.size() < 2000 &&
+             data.rating is int && data.rating >= 1 && data.rating <= 5 &&
+             data.approved is bool;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /projects/{projectId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin() && isValidProject(request.resource.data);
+    }
+
+    match /settings/profile {
+      allow read: if true;
+      allow write: if isAdmin() && isValidProfile(request.resource.data);
+    }
+
+    match /messages/{messageId} {
+      allow create: if isValidMessage(request.resource.data);
+      allow read, delete: if isAdmin();
+      allow update: if false;
+    }
+
+    match /reviews/{reviewId} {
+      allow read: if resource.data.approved == true || isAdmin();
+      allow create: if isValidReview(request.resource.data) && request.resource.data.approved == false;
+      allow update, delete: if isAdmin() && isValidReview(request.resource.data);
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
