@@ -7,7 +7,7 @@ import ProjectCarousel from '../components/ProjectCarousel';
 import ContactForm from '../components/ContactForm';
 import ReviewForm from '../components/ReviewForm';
 import { motion, AnimatePresence } from 'motion/react';
-import { Star, Quote, Plus, X, Github, Linkedin, Twitter, Instagram, Facebook, Youtube, Dribbble, Globe } from 'lucide-react';
+import { Star, Quote, Plus, X } from 'lucide-react';
 
 const CATEGORIES = [
   "Graphic Designing",
@@ -16,19 +16,6 @@ const CATEGORIES = [
   "Brand Design",
   "Photography"
 ];
-
-const getSocialIcon = (platform: string) => {
-  switch (platform.toLowerCase()) {
-    case 'github': return <Github className="w-4 h-4 mr-2" />;
-    case 'linkedin': return <Linkedin className="w-4 h-4 mr-2" />;
-    case 'twitter': return <Twitter className="w-4 h-4 mr-2" />;
-    case 'instagram': return <Instagram className="w-4 h-4 mr-2" />;
-    case 'facebook': return <Facebook className="w-4 h-4 mr-2" />;
-    case 'youtube': return <Youtube className="w-4 h-4 mr-2" />;
-    case 'dribbble': return <Dribbble className="w-4 h-4 mr-2" />;
-    default: return <Globe className="w-4 h-4 mr-2" />;
-  }
-};
 
 export default function Home() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -380,44 +367,43 @@ export default function Home() {
                   </div>
                 </div>
 
-                {profile?.socialLinks && Object.entries(profile.socialLinks).some(([_, username]) => username) && (
-                  <div className="pt-8 mt-8 border-t border-white/10">
-                    <p className="text-[10px] uppercase tracking-widest text-white/30 mb-6">Social Profiles</p>
-                    <div className="flex flex-wrap gap-4">
-                      {Object.entries(profile.socialLinks).map(([platform, username]) => {
-                        if (!username) return null;
-                        
-                        const SOCIAL_BASE_URLS: Record<string, string> = {
-                          github: 'https://github.com/',
-                          linkedin: 'https://linkedin.com/in/',
-                          twitter: 'https://twitter.com/',
-                          instagram: 'https://instagram.com/',
-                          facebook: 'https://facebook.com/',
-                          youtube: 'https://youtube.com/@',
-                          dribbble: 'https://dribbble.com/',
-                          behance: 'https://behance.net/'
-                        };
-                        
-                        const baseUrl = SOCIAL_BASE_URLS[platform] || '';
-                        // If user accidentally pastes full URL, use it directly, otherwise append to base URL
-                        const href = username.startsWith('http') ? username : `${baseUrl}${username.replace(/^@/, '')}`;
+                      {profile?.socialLinks && Object.entries(profile.socialLinks).some(([_, username]) => username) && (
+                        <div className="pt-8 mt-8 border-t border-white/10">
+                          <p className="text-[10px] uppercase tracking-widest text-white/30 mb-6">Social Profiles</p>
+                          <div className="flex flex-wrap gap-4">
+                            {Object.entries(profile.socialLinks).map(([platform, username]) => {
+                              if (!username) return null;
+                              
+                              const SOCIAL_BASE_URLS: Record<string, string> = {
+                                github: 'https://github.com/',
+                                linkedin: 'https://linkedin.com/in/',
+                                twitter: 'https://twitter.com/',
+                                instagram: 'https://instagram.com/',
+                                facebook: 'https://facebook.com/',
+                                youtube: 'https://youtube.com/@',
+                                dribbble: 'https://dribbble.com/',
+                                behance: 'https://behance.net/'
+                              };
+                              
+                              const baseUrl = SOCIAL_BASE_URLS[platform] || '';
+                              // If user accidentally pastes full URL, use it directly, otherwise append to base URL
+                              const href = username.startsWith('http') ? username : `${baseUrl}${username.replace(/^@/, '')}`;
 
-                        return (
-                          <a 
-                            key={platform}
-                            href={href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center px-6 py-3 glass rounded-full text-xs font-medium text-white/80 hover:bg-white hover:text-black hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] transition-all duration-300 capitalize group"
-                          >
-                            <span className="group-hover:text-black transition-colors">{getSocialIcon(platform)}</span>
-                            {platform}
-                          </a>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
+                              return (
+                                <a 
+                                  key={platform}
+                                  href={href}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-center px-6 py-3 glass rounded-full text-xs font-medium text-white/80 hover:bg-white hover:text-black hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] transition-all duration-300 capitalize group"
+                                >
+                                  {platform}
+                                </a>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
               </div>
             </motion.div>
 
