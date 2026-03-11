@@ -1,9 +1,10 @@
 {
-  "apiKey": "AIzaSyDC7fQppH352uKCdE7KTla3yV4Aql0Vu_s",
-  "authDomain": "portfolio-70341.firebaseapp.com",
-  "projectId": "portfolio-70341",
-  "storageBucket": "portfolio-70341.firebasestorage.app",
-  "messagingSenderId": "502852388554",
-  "appId": "1:502852388554:web:4c2ee8906ad9c1ed495633",
-  "firestoreDatabaseId": "(default)"
+  "projectId": "gen-lang-client-0822914203",
+  "appId": "1:891615633262:web:6398a3318a718ca39dab7f",
+  "apiKey": "AIzaSyCir7TB3ATYpeGuQlkqd9F4JzFKCPtMA4k",
+  "authDomain": "gen-lang-client-0822914203.firebaseapp.com",
+  "firestoreDatabaseId": "ai-studio-ab925a68-8c00-464f-a20d-7ee35844361d",
+  "storageBucket": "gen-lang-client-0822914203.firebasestorage.app",
+  "messagingSenderId": "891615633262",
+  "measurementId": ""
 }

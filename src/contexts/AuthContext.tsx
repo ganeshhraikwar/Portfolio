@@ -21,7 +21,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(user);
       if (user) {
         // Check if user is the admin email
-        setIsAdmin(user.email === "ganeshhraikwar@gmail.com");
+        setIsAdmin(user.email === "ganeshhraikwar@gmail.com" && user.emailVerified);
       } else {
         setIsAdmin(false);
       }

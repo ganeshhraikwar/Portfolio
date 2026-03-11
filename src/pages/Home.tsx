@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { collection, query, orderBy, onSnapshot, doc, where } from 'firebase/firestore';
 import { db } from '../firebase';
-import { Project, Profile, OperationType, Review } from '../types';
+import { Project, Profile, OperationType, Review, SocialLink } from '../types';
 import { handleFirestoreError } from '../utils/error-handler';
 import ProjectCarousel from '../components/ProjectCarousel';
 import ContactForm from '../components/ContactForm';
 import ReviewForm from '../components/ReviewForm';
 import { motion, AnimatePresence } from 'motion/react';
-import { Star, Quote, Plus, X } from 'lucide-react';
+import { Star, Quote, Plus, X, Github, Linkedin, Twitter, Instagram, Facebook, Youtube, Dribbble, Globe, ExternalLink } from 'lucide-react';
 
 const CATEGORIES = [
   "Graphic Designing",
@@ -17,10 +17,24 @@ const CATEGORIES = [
   "Photography"
 ];
 
+const getSocialIcon = (platform: string) => {
+  switch (platform.toLowerCase()) {
+    case 'github': return <Github className="w-4 h-4 mr-2" />;
+    case 'linkedin': return <Linkedin className="w-4 h-4 mr-2" />;
+    case 'twitter': return <Twitter className="w-4 h-4 mr-2" />;
+    case 'instagram': return <Instagram className="w-4 h-4 mr-2" />;
+    case 'facebook': return <Facebook className="w-4 h-4 mr-2" />;
+    case 'youtube': return <Youtube className="w-4 h-4 mr-2" />;
+    case 'dribbble': return <Dribbble className="w-4 h-4 mr-2" />;
+    default: return <Globe className="w-4 h-4 mr-2" />;
+  }
+};
+
 export default function Home() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
   const [loading, setLoading] = useState(true);
   const [showReviewForm, setShowReviewForm] = useState(false);
 
@@ -34,6 +48,15 @@ export default function Home() {
         }
       },
       (error) => handleFirestoreError(error, OperationType.GET, 'settings/profile')
+    );
+
+    // Fetch Social Links
+    const linksUnsubscribe = onSnapshot(
+      query(collection(db, 'socialLinks'), orderBy('order', 'asc')),
+      (snapshot) => {
+        setSocialLinks(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as SocialLink)));
+      },
+      (error) => handleFirestoreError(error, OperationType.GET, 'socialLinks')
     );
 
     // Fetch Projects
@@ -71,6 +94,7 @@ export default function Home() {
 
     return () => {
       profileUnsubscribe();
+      linksUnsubscribe();
       projectsUnsubscribe();
       reviewsUnsubscribe();
     };
@@ -121,6 +145,21 @@ export default function Home() {
               {profile?.bio || "I build digital experiences that matter. Crafting thoughtful solutions through design and technology."}
             </p>
             <div className="flex md:justify-end gap-8">
+              <div className="flex flex-wrap gap-4">
+                {socialLinks.map(link => (
+                  <a 
+                    key={link.id} 
+                    href={link.url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex items-center px-4 py-2 rounded-full border border-white/10 hover:bg-white/10 transition-colors text-xs uppercase tracking-widest font-semibold text-white/70 hover:text-white"
+                  >
+                    {getSocialIcon(link.icon || '')}
+                    {link.title}
+                    <ExternalLink className="w-3 h-3 ml-2 opacity-50" />
+                  </a>
+                ))}
+              </div>
               <a href="#works" className="group flex items-center gap-3 text-xs uppercase tracking-widest font-semibold hover:text-white/80 transition-colors">
                 <span className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black group-hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] transition-all duration-500">
                   ↓
@@ -367,43 +406,44 @@ export default function Home() {
                   </div>
                 </div>
 
-                      {profile?.socialLinks && Object.entries(profile.socialLinks).some(([_, username]) => username) && (
-                        <div className="pt-8 mt-8 border-t border-white/10">
-                          <p className="text-[10px] uppercase tracking-widest text-white/30 mb-6">Social Profiles</p>
-                          <div className="flex flex-wrap gap-4">
-                            {Object.entries(profile.socialLinks).map(([platform, username]) => {
-                              if (!username) return null;
-                              
-                              const SOCIAL_BASE_URLS: Record<string, string> = {
-                                github: 'https://github.com/',
-                                linkedin: 'https://linkedin.com/in/',
-                                twitter: 'https://twitter.com/',
-                                instagram: 'https://instagram.com/',
-                                facebook: 'https://facebook.com/',
-                                youtube: 'https://youtube.com/@',
-                                dribbble: 'https://dribbble.com/',
-                                behance: 'https://behance.net/'
-                              };
-                              
-                              const baseUrl = SOCIAL_BASE_URLS[platform] || '';
-                              // If user accidentally pastes full URL, use it directly, otherwise append to base URL
-                              const href = username.startsWith('http') ? username : `${baseUrl}${username.replace(/^@/, '')}`;
+                {profile?.socialLinks && Object.entries(profile.socialLinks).some(([_, username]) => username) && (
+                  <div className="pt-8 mt-8 border-t border-white/10">
+                    <p className="text-[10px] uppercase tracking-widest text-white/30 mb-6">Social Profiles</p>
+                    <div className="flex flex-wrap gap-4">
+                      {Object.entries(profile.socialLinks).map(([platform, username]) => {
+                        if (!username) return null;
+                        
+                        const SOCIAL_BASE_URLS: Record<string, string> = {
+                          github: 'https://github.com/',
+                          linkedin: 'https://linkedin.com/in/',
+                          twitter: 'https://twitter.com/',
+                          instagram: 'https://instagram.com/',
+                          facebook: 'https://facebook.com/',
+                          youtube: 'https://youtube.com/@',
+                          dribbble: 'https://dribbble.com/',
+                          behance: 'https://behance.net/'
+                        };
+                        
+                        const baseUrl = SOCIAL_BASE_URLS[platform] || '';
+                        // If user accidentally pastes full URL, use it directly, otherwise append to base URL
+                        const href = username.startsWith('http') ? username : `${baseUrl}${username.replace(/^@/, '')}`;
 
-                              return (
-                                <a 
-                                  key={platform}
-                                  href={href}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="flex items-center px-6 py-3 glass rounded-full text-xs font-medium text-white/80 hover:bg-white hover:text-black hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] transition-all duration-300 capitalize group"
-                                >
-                                  {platform}
-                                </a>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      )}
+                        return (
+                          <a 
+                            key={platform}
+                            href={href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center px-6 py-3 glass rounded-full text-xs font-medium text-white/80 hover:bg-white hover:text-black hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] transition-all duration-300 capitalize group"
+                          >
+                            <span className="group-hover:text-black transition-colors">{getSocialIcon(platform)}</span>
+                            {platform}
+                          </a>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
             </motion.div>
 
