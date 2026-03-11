@@ -25,6 +25,8 @@
 //   - about: string
 //   - email: string
 //   - avatarUrl: string
+//   - aboutImage: string (optional)
+//   - skills: list (optional)
 //   - socialLinks: map
 //
 // Collection: messages

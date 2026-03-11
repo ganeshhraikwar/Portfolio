@@ -7,7 +7,7 @@ import ProjectCarousel from '../components/ProjectCarousel';
 import ContactForm from '../components/ContactForm';
 import ReviewForm from '../components/ReviewForm';
 import { motion, AnimatePresence } from 'motion/react';
-import { Star, Quote, Plus, X } from 'lucide-react';
+import { Star, Quote, Plus, X, Github, Linkedin, Twitter, Instagram, Facebook, Youtube, Dribbble, Globe } from 'lucide-react';
 
 const CATEGORIES = [
   "Graphic Designing",
@@ -16,6 +16,19 @@ const CATEGORIES = [
   "Brand Design",
   "Photography"
 ];
+
+const getSocialIcon = (platform: string) => {
+  switch (platform.toLowerCase()) {
+    case 'github': return <Github className="w-4 h-4 mr-2" />;
+    case 'linkedin': return <Linkedin className="w-4 h-4 mr-2" />;
+    case 'twitter': return <Twitter className="w-4 h-4 mr-2" />;
+    case 'instagram': return <Instagram className="w-4 h-4 mr-2" />;
+    case 'facebook': return <Facebook className="w-4 h-4 mr-2" />;
+    case 'youtube': return <Youtube className="w-4 h-4 mr-2" />;
+    case 'dribbble': return <Dribbble className="w-4 h-4 mr-2" />;
+    default: return <Globe className="w-4 h-4 mr-2" />;
+  }
+};
 
 export default function Home() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -93,27 +106,24 @@ export default function Home() {
 
   return (
     <div className="relative">
-      {/* Background Atmosphere */}
-      <div className="fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-white/5 blur-[120px]" />
-        <div className="absolute bottom-[10%] right-[-5%] w-[30%] h-[30%] rounded-full bg-white/5 blur-[100px]" />
-      </div>
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20">
         {/* Hero Section */}
         <motion.section 
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-48"
+          className="mb-32"
         >
-          <div className="flex items-center gap-4 mb-8">
+          <div className="flex items-center gap-4 mb-8 animate-float">
             <div className="h-[1px] w-12 bg-white/30" />
-            <span className="text-[10px] uppercase tracking-[0.3em] font-medium text-white/50">Available for projects</span>
+            <span className="text-[10px] uppercase tracking-[0.3em] font-medium text-white/50 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              Available for projects
+            </span>
           </div>
           
           <h1 className="text-7xl md:text-[10rem] font-light tracking-tighter leading-[0.85] mb-12 relative group">
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-white/80 to-white/50 bg-[length:200%_auto] animate-gradient">
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-white/80 to-white/50 bg-[length:200%_auto] animate-gradient text-glow-hover transition-all duration-500">
               {profile?.name || "Your Name"}
             </span>
             <span className="block italic font-serif text-white/20 ml-12 md:ml-24 group-hover:text-white/40 transition-colors duration-700">Portfolio</span>
@@ -124,8 +134,8 @@ export default function Home() {
               {profile?.bio || "I build digital experiences that matter. Crafting thoughtful solutions through design and technology."}
             </p>
             <div className="flex md:justify-end gap-8">
-              <a href="#works" className="group flex items-center gap-3 text-xs uppercase tracking-widest font-semibold">
-                <span className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-500">
+              <a href="#works" className="group flex items-center gap-3 text-xs uppercase tracking-widest font-semibold hover:text-white/80 transition-colors">
+                <span className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black group-hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] transition-all duration-500">
                   ↓
                 </span>
                 Explore Work
@@ -133,6 +143,59 @@ export default function Home() {
             </div>
           </div>
         </motion.section>
+
+        {/* About Me Section */}
+        {(profile?.about || profile?.aboutImage || (profile?.skills && profile.skills.length > 0)) && (
+          <motion.section 
+            id="about"
+            className="mb-48"
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+              {profile.aboutImage && (
+                <div className="relative rounded-[2.5rem] overflow-hidden aspect-[4/5] lg:aspect-square">
+                  <img 
+                    src={profile.aboutImage} 
+                    alt={profile.name} 
+                    className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                    referrerPolicy="no-referrer"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                </div>
+              )}
+              <div className={`space-y-12 ${!profile.aboutImage ? 'lg:col-span-2' : ''}`}>
+                <div>
+                  <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-white/30 mb-4 block">About Me</span>
+                  <h2 className="text-4xl md:text-5xl font-light tracking-tight mb-8">
+                    {profile.title || "Creative Professional"}
+                  </h2>
+                  <p className="text-white/70 font-light text-lg leading-relaxed whitespace-pre-wrap">
+                    {profile.about}
+                  </p>
+                </div>
+
+                {profile.skills && profile.skills.length > 0 && (
+                  <div>
+                    <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-white/30 mb-6 block">Skills & Expertise</span>
+                    <div className="flex flex-wrap gap-3">
+                      {profile.skills.map((skill, index) => (
+                        <span 
+                          key={index}
+                          className="px-4 py-2 glass rounded-full text-xs font-medium text-white/80"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </motion.section>
+        )}
 
         {/* Projects Carousels */}
         <motion.section 
@@ -313,9 +376,48 @@ export default function Home() {
                   </div>
                   <div>
                     <p className="text-[10px] uppercase tracking-widest text-white/30 mb-1">Email</p>
-                    <p className="text-white font-light">{profile?.email || "hello@example.com"}</p>
+                    <p className="text-white font-light">{profile?.email || "ganeshhraikwar@gmail.com"}</p>
                   </div>
                 </div>
+
+                {profile?.socialLinks && Object.entries(profile.socialLinks).some(([_, username]) => username) && (
+                  <div className="pt-8 mt-8 border-t border-white/10">
+                    <p className="text-[10px] uppercase tracking-widest text-white/30 mb-6">Social Profiles</p>
+                    <div className="flex flex-wrap gap-4">
+                      {Object.entries(profile.socialLinks).map(([platform, username]) => {
+                        if (!username) return null;
+                        
+                        const SOCIAL_BASE_URLS: Record<string, string> = {
+                          github: 'https://github.com/',
+                          linkedin: 'https://linkedin.com/in/',
+                          twitter: 'https://twitter.com/',
+                          instagram: 'https://instagram.com/',
+                          facebook: 'https://facebook.com/',
+                          youtube: 'https://youtube.com/@',
+                          dribbble: 'https://dribbble.com/',
+                          behance: 'https://behance.net/'
+                        };
+                        
+                        const baseUrl = SOCIAL_BASE_URLS[platform] || '';
+                        // If user accidentally pastes full URL, use it directly, otherwise append to base URL
+                        const href = username.startsWith('http') ? username : `${baseUrl}${username.replace(/^@/, '')}`;
+
+                        return (
+                          <a 
+                            key={platform}
+                            href={href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center px-6 py-3 glass rounded-full text-xs font-medium text-white/80 hover:bg-white hover:text-black hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] transition-all duration-300 capitalize group"
+                          >
+                            <span className="group-hover:text-black transition-colors">{getSocialIcon(platform)}</span>
+                            {platform}
+                          </a>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
             </motion.div>
 

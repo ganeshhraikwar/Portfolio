@@ -15,10 +15,28 @@ export default function ContactForm() {
     e.preventDefault();
     setSending(true);
     try {
+      // Save to Firebase Database
       await addDoc(collection(db, 'messages'), {
         ...formData,
         createdAt: serverTimestamp()
       });
+
+      // Send email to ganeshhraikwar@gmail.com via FormSubmit
+      await fetch('https://formsubmit.co/ajax/ganeshhraikwar@gmail.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+          _subject: `New Portfolio Message from ${formData.name}`,
+          _template: 'box'
+        })
+      });
+
       setSuccess(true);
       setFormData({ name: '', email: '', message: '' });
       setTimeout(() => setSuccess(false), 5000);

@@ -19,20 +19,28 @@ export default function Navbar() {
           className="glass rounded-full px-6 py-3 flex justify-between items-center"
         >
           <div className="flex items-center">
-            <Link to="/" className="text-lg font-semibold tracking-tighter text-white">
-              {isAdminPath ? 'Admin' : 'Portfolio'}<span className="text-white/30">.</span>
+            <Link to="/" className="text-lg font-semibold tracking-tighter text-white group flex items-center">
+              <motion.div
+                whileHover={{ rotate: 180, scale: 1.1 }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
+                className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center mr-2 group-hover:bg-white group-hover:text-black transition-colors"
+              >
+                <span className="text-[10px] font-bold">P</span>
+              </motion.div>
+              {isAdminPath ? 'Admin' : 'Portfolio'}<span className="text-white/30 group-hover:text-white transition-colors">.</span>
             </Link>
           </div>
 
           <div className="hidden sm:flex items-center space-x-8">
-            <Link to="/" className="text-[10px] uppercase tracking-[0.2em] font-bold text-white/50 hover:text-white transition-colors">Works</Link>
-            <a href="#contact" className="text-[10px] uppercase tracking-[0.2em] font-bold text-white/50 hover:text-white transition-colors">Contact</a>
+            <a href="/#about" className="text-[10px] uppercase tracking-[0.2em] font-bold text-white/50 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] transition-all">About</a>
+            <a href="/#works" className="text-[10px] uppercase tracking-[0.2em] font-bold text-white/50 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] transition-all">Works</a>
+            <a href="/#contact" className="text-[10px] uppercase tracking-[0.2em] font-bold text-white/50 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] transition-all">Contact</a>
             {isAdmin && (
               <>
-                <Link to="/admin" className="text-[10px] uppercase tracking-[0.2em] font-bold text-white/50 hover:text-white transition-colors">Dashboard</Link>
+                <Link to="/admin" className="text-[10px] uppercase tracking-[0.2em] font-bold text-white/50 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] transition-all">Dashboard</Link>
                 <button 
                   onClick={() => auth.signOut()}
-                  className="flex items-center text-[10px] uppercase tracking-[0.2em] font-bold text-white/50 hover:text-white transition-colors"
+                  className="flex items-center text-[10px] uppercase tracking-[0.2em] font-bold text-white/50 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] transition-all"
                 >
                   <LogOut className="w-3 h-3 mr-2" />
                   Logout

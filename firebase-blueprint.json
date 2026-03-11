@@ -30,12 +30,19 @@
         "about": { "type": "string", "description": "Detailed about section" },
         "email": { "type": "string", "description": "Contact email" },
         "avatarUrl": { "type": "string", "description": "Profile picture URL" },
+        "aboutImage": { "type": "string", "description": "About me image URL" },
+        "skills": { "type": "array", "items": { "type": "string" }, "description": "List of skills" },
         "socialLinks": {
           "type": "object",
           "properties": {
             "github": { "type": "string" },
             "linkedin": { "type": "string" },
-            "twitter": { "type": "string" }
+            "twitter": { "type": "string" },
+            "instagram": { "type": "string" },
+            "facebook": { "type": "string" },
+            "youtube": { "type": "string" },
+            "dribbble": { "type": "string" },
+            "behance": { "type": "string" }
           }
         }
       }

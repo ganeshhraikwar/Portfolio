@@ -5,6 +5,8 @@ import { Project, OperationType } from '../types';
 import { handleFirestoreError } from '../utils/error-handler';
 import { Plus, Trash2, Edit2, X, Save } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 export default function AdminProjects() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -73,6 +75,7 @@ export default function AdminProjects() {
 
         let clientRequest = "";
         let solution = "";
+        let content = "";
         let beforeImage = "";
         let afterImage = "";
         let galleryImages: string[] = [];
@@ -111,6 +114,32 @@ export default function AdminProjects() {
         } else if (isWeb) {
           clientRequest = "The client approached us with a vision to modernize their digital presence. They needed a solution that would not only look visually stunning but also improve user engagement and conversion rates. The main challenge was to keep their existing brand identity while giving it a fresh, modern twist.";
           solution = "We designed a comprehensive digital strategy, starting with a complete UI/UX overhaul. By introducing a modern design system, fluid animations, and a responsive layout, we transformed their platform into an immersive experience. We also optimized the performance to ensure fast loading times across all devices.";
+          content = `
+            <h2>The Challenge</h2>
+            <p>The client approached us with an outdated website that was suffering from high bounce rates and low conversion. Their primary goals were to:</p>
+            <ul>
+              <li>Modernize the visual identity while retaining brand recognition.</li>
+              <li>Improve the user experience (UX) to guide visitors towards key conversion points.</li>
+              <li>Ensure the website is fully responsive and performs well on mobile devices.</li>
+              <li>Implement a robust Content Management System (CMS) for easy updates.</li>
+            </ul>
+            <p>The main challenge was balancing a highly creative, visually engaging design with strict performance requirements and accessibility standards.</p>
+            
+            <h2>Our Approach & Solution</h2>
+            <p>We started with a deep dive into their user analytics to identify the main drop-off points. Based on this data, we restructured the site architecture and created wireframes focused on a clear user journey.</p>
+            <h3>1. Design System & UI</h3>
+            <p>We developed a new design system featuring a refined color palette, modern typography, and custom iconography. We utilized subtle micro-interactions and smooth page transitions to create a premium feel without sacrificing performance.</p>
+            <h3>2. Technical Implementation</h3>
+            <p>The frontend was built using <strong>React</strong> and <strong>Tailwind CSS</strong>, allowing for rapid development and a highly customized UI. We implemented server-side rendering (SSR) to ensure optimal SEO performance and fast initial load times.</p>
+            <h3>3. Results</h3>
+            <p>Post-launch, the client saw significant improvements across all key metrics:</p>
+            <ul>
+              <li><strong>45% increase</strong> in mobile conversion rate.</li>
+              <li><strong>60% reduction</strong> in average page load time.</li>
+              <li><strong>30% decrease</strong> in bounce rate.</li>
+            </ul>
+            <p>You can view the live project <a href="#" target="_blank">here</a>.</p>
+          `;
           beforeImage = `https://picsum.photos/seed/webbefore${p.id}/800/600`;
           afterImage = `https://picsum.photos/seed/webafter${p.id}/800/600`;
           galleryImages = [
@@ -133,6 +162,7 @@ export default function AdminProjects() {
         await updateDoc(doc(db, 'projects', p.id), {
           clientRequest,
           solution,
+          content,
           beforeImage,
           afterImage,
           galleryImages
@@ -213,6 +243,17 @@ export default function AdminProjects() {
                       onChange={e => setCurrentProject({...currentProject, description: e.target.value})}
                       className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-2xl focus:ring-2 focus:ring-zinc-900 outline-none h-24"
                     />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">Detailed Content</label>
+                    <div className="bg-white rounded-2xl overflow-hidden border border-zinc-200 focus-within:ring-2 focus-within:ring-zinc-900">
+                      <ReactQuill 
+                        theme="snow" 
+                        value={currentProject.content || ''} 
+                        onChange={content => setCurrentProject({...currentProject, content})}
+                        className="h-48 mb-12"
+                      />
+                    </div>
                   </div>
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">Image URL</label>

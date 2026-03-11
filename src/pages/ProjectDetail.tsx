@@ -47,12 +47,6 @@ export default function ProjectDetail() {
 
   return (
     <div className="relative min-h-screen">
-      {/* Background Atmosphere */}
-      <div className="fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-white/5 blur-[120px]" />
-        <div className="absolute bottom-[10%] right-[-5%] w-[30%] h-[30%] rounded-full bg-white/5 blur-[100px]" />
-      </div>
-
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
         <Link to="/" className="group inline-flex items-center text-[10px] uppercase tracking-[0.3em] font-bold text-white/30 hover:text-white transition-all mb-16">
           <ArrowLeft className="w-4 h-4 mr-3 group-hover:-translate-x-1 transition-transform" /> Back to Selection
@@ -155,11 +149,10 @@ export default function ProjectDetail() {
                   transition={{ duration: 0.8 }}
                 >
                   <h2 className="text-[10px] uppercase tracking-[0.3em] font-bold text-white/30 mb-8">04 — The Process</h2>
-                  <div className="prose prose-invert prose-zinc max-w-none">
-                    <p className="text-white/60 font-light leading-relaxed text-lg whitespace-pre-wrap">
-                      {project.content}
-                    </p>
-                  </div>
+                  <div 
+                    className="prose prose-invert prose-zinc max-w-none prose-p:text-white/60 prose-p:font-light prose-p:leading-relaxed prose-p:text-lg prose-headings:font-light prose-a:text-white hover:prose-a:text-white/80"
+                    dangerouslySetInnerHTML={{ __html: project.content }}
+                  />
                 </motion.div>
               )}
 
@@ -234,10 +227,10 @@ export default function ProjectDetail() {
                       href={project.link} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="flex items-center justify-between p-6 glass rounded-2xl hover:bg-white/10 transition-all group border border-white/5"
+                      className="flex items-center justify-between p-6 glass rounded-2xl hover:bg-white hover:text-black hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] transition-all duration-300 group border border-white/5"
                     >
                       <span className="text-xs font-bold uppercase tracking-widest">Live Experience</span>
-                      <ExternalLink className="w-4 h-4 text-white/20 group-hover:text-white group-hover:translate-x-1 group-hover:-translate-y-1 transition-all" />
+                      <ExternalLink className="w-4 h-4 text-white/20 group-hover:text-black group-hover:translate-x-1 group-hover:-translate-y-1 transition-all" />
                     </a>
                   )}
                   {project.github && (
@@ -245,20 +238,50 @@ export default function ProjectDetail() {
                       href={project.github} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="flex items-center justify-between p-6 glass rounded-2xl hover:bg-white/10 transition-all group border border-white/5"
+                      className="flex items-center justify-between p-6 glass rounded-2xl hover:bg-white hover:text-black hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] transition-all duration-300 group border border-white/5"
                     >
                       <span className="text-xs font-bold uppercase tracking-widest">Source Code</span>
-                      <Github className="w-4 h-4 text-white/20 group-hover:text-white group-hover:translate-x-1 group-hover:-translate-y-1 transition-all" />
+                      <Github className="w-4 h-4 text-white/20 group-hover:text-black group-hover:translate-x-1 group-hover:-translate-y-1 transition-all" />
                     </a>
                   )}
                 </div>
               </motion.div>
 
+              {project.link && (
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: 0.8 }}
+                  className="hidden lg:block"
+                >
+                  <h2 className="text-[10px] uppercase tracking-[0.3em] font-bold text-white/30 mb-4">Live Preview</h2>
+                  <div className="w-full aspect-[9/16] rounded-3xl overflow-hidden glass border border-white/10 shadow-2xl relative group">
+                    <div className="absolute inset-x-0 top-0 h-8 bg-white/5 border-b border-white/10 flex items-center px-4 gap-2 z-10 backdrop-blur-md">
+                      <div className="w-2 h-2 rounded-full bg-red-500/50" />
+                      <div className="w-2 h-2 rounded-full bg-yellow-500/50" />
+                      <div className="w-2 h-2 rounded-full bg-green-500/50" />
+                    </div>
+                    <iframe 
+                      src={project.link} 
+                      title="Live Preview"
+                      className="w-full h-full pt-8 bg-white"
+                      sandbox="allow-scripts allow-same-origin"
+                    />
+                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
+                      <a href={project.link} target="_blank" rel="noopener noreferrer" className="px-6 py-3 bg-white text-black rounded-full text-xs font-bold uppercase tracking-widest pointer-events-auto hover:scale-105 transition-transform">
+                        Open Full Screen
+                      </a>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.8 }}
+                transition={{ duration: 0.8, delay: 0.9 }}
               >
                 <h2 className="text-[10px] uppercase tracking-[0.3em] font-bold text-white/30 mb-4">Timeline</h2>
                 <p className="text-white/60 font-light text-xl">

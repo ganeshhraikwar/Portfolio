@@ -33,10 +33,17 @@ export interface Profile {
   about: string;
   email: string;
   avatarUrl: string;
+  aboutImage?: string;
+  skills?: string[];
   socialLinks: {
     github?: string;
     linkedin?: string;
     twitter?: string;
+    instagram?: string;
+    facebook?: string;
+    youtube?: string;
+    dribbble?: string;
+    behance?: string;
   };
 }
 
