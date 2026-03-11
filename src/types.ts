@@ -7,14 +7,6 @@ export enum OperationType {
   WRITE = 'write',
 }
 
-export interface SocialLink {
-  id: string;
-  title: string;
-  url: string;
-  icon?: string; // e.g., 'instagram', 'github', 'linkedin', 'twitter'
-  order: number;
-}
-
 export interface Project {
   id: string;
   title: string;

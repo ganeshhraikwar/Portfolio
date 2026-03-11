@@ -6,14 +6,12 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 // Pages
 import Home from './pages/Home';
 import ProjectDetail from './pages/ProjectDetail';
-import Links from './pages/Links';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminProjects from './pages/AdminProjects';
 import AdminProfile from './pages/AdminProfile';
 import AdminMessages from './pages/AdminMessages';
 import AdminReviews from './pages/AdminReviews';
-import AdminLinks from './pages/AdminLinks';
 
 // Components
 import Navbar from './components/Navbar';
@@ -40,7 +38,6 @@ export default function App() {
                 {/* Public Routes */}
                 <Route path="/" element={<Home />} />
                 <Route path="/project/:id" element={<ProjectDetail />} />
-                <Route path="/links" element={<Links />} />
                 
                 {/* Admin Routes */}
                 <Route path="/admin/login" element={<AdminLogin />} />
@@ -65,14 +62,6 @@ export default function App() {
                   element={
                     <ProtectedRoute>
                       <AdminProfile />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route 
-                  path="/admin/links" 
-                  element={
-                    <ProtectedRoute>
-                      <AdminLinks />
                     </ProtectedRoute>
                   } 
                 />
