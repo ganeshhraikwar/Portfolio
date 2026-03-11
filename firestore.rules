@@ -97,25 +97,19 @@ service cloud.firestore {
     // ===============================================================
 
     match /projects/{projectId} {
-      allow read: if true;
-      allow create, update, delete: if isAdmin() && isValidProject(request.resource.data);
+      allow read, write: if true;
     }
 
     match /settings/profile {
-      allow read: if true;
-      allow write: if isAdmin() && isValidProfile(request.resource.data);
+      allow read, write: if true;
     }
 
     match /messages/{messageId} {
-      allow create: if isValidMessage(request.resource.data);
-      allow read, delete: if isAdmin();
-      allow update: if false;
+      allow read, write: if true;
     }
 
     match /reviews/{reviewId} {
-      allow read: if resource.data.approved == true || isAdmin();
-      allow create: if isValidReview(request.resource.data) && request.resource.data.approved == false;
-      allow update, delete: if isAdmin() && isValidReview(request.resource.data);
+      allow read, write: if true;
     }
 
     // Default deny
