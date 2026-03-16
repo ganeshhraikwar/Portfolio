@@ -10,7 +10,6 @@ import { motion, AnimatePresence } from 'motion/react';
 export default function AdminMessages() {
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [loading, setLoading] = useState(true);
-  const [statusMessage, setStatusMessage] = useState('');
 
   useEffect(() => {
     const q = query(collection(db, 'messages'), orderBy('createdAt', 'desc'));
@@ -27,12 +26,12 @@ export default function AdminMessages() {
   }, []);
 
   const handleDelete = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this message?')) return;
     try {
       await deleteDoc(doc(db, 'messages', id));
-      setStatusMessage('Message deleted successfully!');
-      setTimeout(() => setStatusMessage(''), 3000);
-    } catch (error) {
-      handleFirestoreError(error, OperationType.DELETE, `messages/${id}`);
+    } catch (error: any) {
+      console.error("Error deleting message:", error);
+      alert(`Failed to delete message: ${error.message}`);
     }
   };
 
@@ -57,19 +56,6 @@ export default function AdminMessages() {
         <h1 className="text-5xl font-light tracking-tight text-white">Messages</h1>
         <p className="text-white/40 mt-2 font-light">View and manage inquiries from your contact form.</p>
       </motion.header>
-
-      <AnimatePresence>
-        {statusMessage && (
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="mb-8 p-4 bg-emerald-500/10 text-emerald-400 text-xs rounded-2xl border border-emerald-500/20 text-center font-bold uppercase tracking-widest"
-          >
-            {statusMessage}
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       <div className="space-y-6">
         {messages.length === 0 ? (

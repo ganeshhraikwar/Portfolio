@@ -13,7 +13,6 @@ export default function AdminProjects() {
   const [isEditing, setIsEditing] = useState(false);
   const [currentProject, setCurrentProject] = useState<Partial<Project>>({});
   const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState('');
 
   useEffect(() => {
     const q = query(collection(db, 'projects'), orderBy('createdAt', 'desc'));
@@ -36,40 +35,38 @@ export default function AdminProjects() {
         ...currentProject,
         updatedAt: serverTimestamp(),
         order: currentProject.order || projects.length,
-        tags: typeof currentProject.tags === 'string' ? (currentProject.tags as string).split(',').map(t => t.trim()).filter(Boolean) : currentProject.tags || [],
-        galleryImages: typeof currentProject.galleryImages === 'string' ? (currentProject.galleryImages as string).split(',').map(t => t.trim()).filter(Boolean) : currentProject.galleryImages || []
+        tags: typeof currentProject.tags === 'string' ? (currentProject.tags as string).split(',').map(t => t.trim()) : currentProject.tags || []
       };
 
       if (currentProject.id) {
         const { id, ...updateData } = data;
         await updateDoc(doc(db, 'projects', id), updateData);
-        setMessage('Project updated successfully!');
       } else {
         await addDoc(collection(db, 'projects'), {
           ...data,
           createdAt: serverTimestamp()
         });
-        setMessage('Project added successfully!');
       }
-      setTimeout(() => setMessage(''), 3000);
       setIsEditing(false);
       setCurrentProject({});
-    } catch (error) {
-      handleFirestoreError(error, OperationType.WRITE, 'projects');
+    } catch (error: any) {
+      console.error("Error saving project:", error);
+      alert(`Failed to save project: ${error.message}`);
     }
   };
 
   const handleDelete = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this project?')) return;
     try {
       await deleteDoc(doc(db, 'projects', id));
-      setMessage('Project deleted successfully!');
-      setTimeout(() => setMessage(''), 3000);
-    } catch (error) {
-      handleFirestoreError(error, OperationType.DELETE, `projects/${id}`);
+    } catch (error: any) {
+      console.error("Error deleting project:", error);
+      alert(`Failed to delete project: ${error.message}`);
     }
   };
 
   const populateSampleDetails = async () => {
+    if (!confirm('This will add sample details (client request, solution, images) to all your existing projects based on their tags. Proceed?')) return;
     try {
       for (const p of projects) {
         const tagsLower = (p.tags || []).map(t => t.toLowerCase());
@@ -173,10 +170,10 @@ export default function AdminProjects() {
           galleryImages
         });
       }
-      setMessage('Sample details added successfully!');
-      setTimeout(() => setMessage(''), 3000);
-    } catch (error) {
-      handleFirestoreError(error, OperationType.WRITE, 'projects');
+      alert('Sample details added to all projects successfully!');
+    } catch (error: any) {
+      console.error("Error adding sample details:", error);
+      alert(`Failed to add sample details: ${error.message}`);
     }
   };
 
@@ -207,19 +204,6 @@ export default function AdminProjects() {
           </button>
         </div>
       </div>
-
-      <AnimatePresence>
-        {message && (
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="mb-8 p-4 bg-emerald-50 text-emerald-600 rounded-2xl border border-emerald-100 text-center font-medium"
-          >
-            {message}
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       <AnimatePresence>
         {isEditing && (
@@ -351,7 +335,7 @@ export default function AdminProjects() {
                     <input 
                       type="text" 
                       value={Array.isArray(currentProject.galleryImages) ? currentProject.galleryImages.join(', ') : currentProject.galleryImages || ''} 
-                      onChange={e => setCurrentProject({...currentProject, galleryImages: e.target.value as any})}
+                      onChange={e => setCurrentProject({...currentProject, galleryImages: e.target.value.split(',').map(url => url.trim()).filter(Boolean)})}
                       className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-2xl focus:ring-2 focus:ring-zinc-900 outline-none"
                       placeholder="https://image1.jpg, https://image2.jpg"
                     />

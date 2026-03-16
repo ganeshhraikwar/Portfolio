@@ -45,8 +45,9 @@ export default function AdminLinks() {
       }
       setIsEditing(false);
       setCurrentLink({});
-    } catch (error) {
-      handleFirestoreError(error, OperationType.WRITE, 'socialLinks');
+    } catch (error: any) {
+      console.error("Error saving link:", error);
+      alert(`Failed to save link: ${error.message}`);
     }
   };
 
@@ -54,8 +55,9 @@ export default function AdminLinks() {
     if (!confirm('Are you sure you want to delete this link?')) return;
     try {
       await deleteDoc(doc(db, 'socialLinks', id));
-    } catch (error) {
-      handleFirestoreError(error, OperationType.DELETE, `socialLinks/${id}`);
+    } catch (error: any) {
+      console.error("Error deleting link:", error);
+      alert(`Failed to delete link: ${error.message}`);
     }
   };
 

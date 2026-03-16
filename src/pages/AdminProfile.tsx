@@ -40,11 +40,6 @@ export default function AdminProfile() {
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, field: 'avatarUrl' | 'aboutImage') => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 500 * 1024) { // 500KB limit
-        setMessage('Image is too large. Please upload an image smaller than 500KB.');
-        setTimeout(() => setMessage(''), 5000);
-        return;
-      }
       const reader = new FileReader();
       reader.onloadend = () => {
         setProfile(prev => ({ ...prev, [field]: reader.result as string }));
@@ -61,8 +56,9 @@ export default function AdminProfile() {
       await setDoc(doc(db, 'settings', 'profile'), profile);
       setMessage('Profile updated successfully!');
       setTimeout(() => setMessage(''), 3000);
-    } catch (error) {
-      handleFirestoreError(error, OperationType.WRITE, 'settings/profile');
+    } catch (error: any) {
+      console.error("Error saving profile:", error);
+      alert(`Failed to save profile: ${error.message}`);
     } finally {
       setSaving(false);
     }
