@@ -55,6 +55,14 @@ export interface ContactMessage {
   createdAt: any;
 }
 
+export interface SocialLink {
+  id: string;
+  title: string;
+  url: string;
+  order: number;
+  icon?: string;
+}
+
 export interface Review {
   id: string;
   name: string;

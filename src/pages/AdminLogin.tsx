@@ -26,7 +26,12 @@ export default function AdminLogin() {
         navigate('/admin');
       }
     } catch (err: any) {
-      setError(err.message);
+      console.error("Login error:", err);
+      if (err.code === 'auth/unauthorized-domain') {
+        setError("This domain is not authorized for Google Login. Please go to Firebase Console -> Authentication -> Settings -> Authorized domains, and add your Vercel domain.");
+      } else {
+        setError(err.message || "An error occurred during login.");
+      }
     }
   };
 
@@ -68,7 +73,7 @@ export default function AdminLogin() {
             transition={{ duration: 0.5, delay: 0.4 }}
             className="text-white/40 mt-3 text-sm font-light"
           >
-            Sign in to manage your professional space
+            Sign in with <strong className="text-white">ganeshhraikwar@gmail.com</strong> to manage your professional space
           </motion.p>
         </div>
 

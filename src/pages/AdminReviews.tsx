@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'motion/react';
 export default function AdminReviews() {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
+  const [statusMessage, setStatusMessage] = useState('');
 
   useEffect(() => {
     const q = query(collection(db, 'reviews'), orderBy('createdAt', 'desc'));
@@ -25,9 +26,10 @@ export default function AdminReviews() {
   }, []);
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this review?')) return;
     try {
       await deleteDoc(doc(db, 'reviews', id));
+      setStatusMessage('Review deleted successfully!');
+      setTimeout(() => setStatusMessage(''), 3000);
     } catch (error) {
       handleFirestoreError(error, OperationType.DELETE, `reviews/${id}`);
     }
@@ -38,6 +40,8 @@ export default function AdminReviews() {
       await updateDoc(doc(db, 'reviews', review.id), {
         approved: !review.approved
       });
+      setStatusMessage(`Review ${!review.approved ? 'approved' : 'unapproved'} successfully!`);
+      setTimeout(() => setStatusMessage(''), 3000);
     } catch (error) {
       handleFirestoreError(error, OperationType.UPDATE, `reviews/${review.id}`);
     }
@@ -64,6 +68,19 @@ export default function AdminReviews() {
         <h1 className="text-5xl font-light tracking-tight text-white">Reviews</h1>
         <p className="text-white/40 mt-2 font-light">Manage and approve client testimonials.</p>
       </motion.header>
+
+      <AnimatePresence>
+        {statusMessage && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="mb-8 p-4 bg-emerald-500/10 text-emerald-400 text-xs rounded-2xl border border-emerald-500/20 text-center font-bold uppercase tracking-widest"
+          >
+            {statusMessage}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div className="grid grid-cols-1 gap-6">
         {reviews.length === 0 ? (

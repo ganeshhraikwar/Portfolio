@@ -40,6 +40,11 @@ export default function AdminProfile() {
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, field: 'avatarUrl' | 'aboutImage') => {
     const file = e.target.files?.[0];
     if (file) {
+      if (file.size > 500 * 1024) { // 500KB limit
+        setMessage('Image is too large. Please upload an image smaller than 500KB.');
+        setTimeout(() => setMessage(''), 5000);
+        return;
+      }
       const reader = new FileReader();
       reader.onloadend = () => {
         setProfile(prev => ({ ...prev, [field]: reader.result as string }));

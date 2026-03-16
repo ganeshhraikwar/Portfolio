@@ -61,7 +61,7 @@ export default function Footer() {
           </div>
           <div className="flex items-center gap-4 flex-wrap justify-center">
             {profile?.socialLinks && Object.entries(profile.socialLinks).map(([platform, username]) => {
-              if (!username) return null;
+              if (!username || typeof username !== 'string') return null;
               const baseUrl = SOCIAL_BASE_URLS[platform] || '';
               const href = username.startsWith('http') ? username : `${baseUrl}${username.replace(/^@/, '')}`;
               

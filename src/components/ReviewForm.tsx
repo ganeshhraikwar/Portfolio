@@ -13,11 +13,13 @@ export default function ReviewForm() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [error, setError] = useState('');
   const [hoveredRating, setHoveredRating] = useState(0);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError('');
     try {
       await addDoc(collection(db, 'reviews'), {
         ...formData,
@@ -26,8 +28,10 @@ export default function ReviewForm() {
       });
       setIsSuccess(true);
       setFormData({ name: '', role: '', content: '', rating: 5 });
-    } catch (error) {
-      console.error('Error submitting review:', error);
+    } catch (err: any) {
+      console.error('Error submitting review:', err);
+      setError('Failed to submit review. Please try again later.');
+      setTimeout(() => setError(''), 5000);
     } finally {
       setIsSubmitting(false);
     }
@@ -57,6 +61,15 @@ export default function ReviewForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {error && (
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="p-4 bg-red-500/10 text-red-400 text-xs rounded-2xl border border-red-500/20 text-center font-bold uppercase tracking-widest"
+        >
+          {error}
+        </motion.div>
+      )}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <motion.div 
           initial={{ opacity: 0, x: -20 }}

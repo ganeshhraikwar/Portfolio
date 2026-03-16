@@ -75,9 +75,6 @@ export default function Navbar() {
             <Link to="/admin/messages" className={`text-[9px] uppercase tracking-widest font-bold flex items-center whitespace-nowrap ${location.pathname === '/admin/messages' ? 'text-white' : 'text-white/30 hover:text-white/60'}`}>
               <Mail className="w-3 h-3 mr-2" /> Messages
             </Link>
-            <Link to="/admin/links" className={`text-[9px] uppercase tracking-widest font-bold flex items-center whitespace-nowrap ${location.pathname === '/admin/links' ? 'text-white' : 'text-white/30 hover:text-white/60'}`}>
-              <LayoutDashboard className="w-3 h-3 mr-2" /> Links
-            </Link>
             <Link to="/admin/profile" className={`text-[9px] uppercase tracking-widest font-bold flex items-center whitespace-nowrap ${location.pathname === '/admin/profile' ? 'text-white' : 'text-white/30 hover:text-white/60'}`}>
               <User className="w-3 h-3 mr-2" /> Profile
             </Link>

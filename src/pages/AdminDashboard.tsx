@@ -29,9 +29,9 @@ export default function AdminDashboard() {
   }, []);
 
   const handleSeedData = async () => {
-    if (!confirm('This will add sample projects and reviews to your portfolio. Continue?')) return;
-    
+    // We will just proceed without confirm for now to avoid iframe issues
     setIsSeeding(true);
+    setSeedMessage('');
     try {
       await seedProjects();
       setSeedMessage('Sample data added successfully!');
@@ -49,7 +49,8 @@ export default function AdminDashboard() {
       setTimeout(() => setSeedMessage(''), 3000);
     } catch (error) {
       console.error('Error seeding data:', error);
-      alert('Failed to add sample data.');
+      setSeedMessage('Failed to add sample data.');
+      setTimeout(() => setSeedMessage(''), 3000);
     } finally {
       setIsSeeding(false);
     }

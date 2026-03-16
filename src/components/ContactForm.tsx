@@ -10,6 +10,7 @@ export default function ContactForm() {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [sending, setSending] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,7 +41,11 @@ export default function ContactForm() {
       setSuccess(true);
       setFormData({ name: '', email: '', message: '' });
       setTimeout(() => setSuccess(false), 5000);
-    } catch (error) {
+    } catch (error: any) {
+      console.error(error);
+      setSuccess(false);
+      setError("Failed to send message. Please try again later.");
+      setTimeout(() => setError(''), 5000);
       handleFirestoreError(error, OperationType.CREATE, 'messages');
     } finally {
       setSending(false);
@@ -63,6 +68,15 @@ export default function ContactForm() {
           className="p-4 bg-emerald-500/10 text-emerald-400 text-xs rounded-2xl border border-emerald-500/20 text-center font-bold uppercase tracking-widest"
         >
           Message sent successfully!
+        </motion.div>
+      )}
+      {error && (
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="p-4 bg-red-500/10 text-red-400 text-xs rounded-2xl border border-red-500/20 text-center font-bold uppercase tracking-widest"
+        >
+          {error}
         </motion.div>
       )}
       
